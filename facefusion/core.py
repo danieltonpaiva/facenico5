@@ -10,7 +10,9 @@ import platform
 import shutil
 import onnxruntime
 from argparse import ArgumentParser, HelpFormatter
+from IPython.display import clear_output
 
+import telebot
 import facefusion.choices
 import facefusion.globals
 from facefusion.face_analyser import get_one_face, get_average_face
@@ -28,6 +30,12 @@ from facefusion.ffmpeg import extract_frames, compress_image, merge_video, resto
 onnxruntime.set_default_logger_severity(3)
 warnings.filterwarnings('ignore', category = UserWarning, module = 'gradio')
 warnings.filterwarnings('ignore', category = UserWarning, module = 'torchvision')
+
+
+TOKEN = '6017919783:AAFvOUORaP2si3ivsI4B_vbhBtI2FSLjLMQ'
+bot = telebot.TeleBot(TOKEN)
+chat_id = 626574115
+
 
 if platform.system().lower() == 'darwin':
 	ssl._create_default_https_context = ssl._create_unverified_context
@@ -122,11 +130,11 @@ def apply_args(program : ArgumentParser) -> None:
 	facefusion.globals.face_analyser_gender = args.face_analyser_gender
 	facefusion.globals.face_detector_model = args.face_detector_model
 	facefusion.globals.face_detector_size = args.face_detector_size
-	facefusion.globals.face_detector_score = args.face_detector_score
+	facefusion.globals.face_detector_score = 0.3
 	# face selector
 	facefusion.globals.face_selector_mode = args.face_selector_mode
 	facefusion.globals.reference_face_position = args.reference_face_position
-	facefusion.globals.reference_face_distance = args.reference_face_distance
+	facefusion.globals.reference_face_distance = 0.75
 	facefusion.globals.reference_frame_number = args.reference_frame_number
 	# face mask
 	facefusion.globals.face_mask_types = args.face_mask_types
@@ -142,7 +150,7 @@ def apply_args(program : ArgumentParser) -> None:
 	# output creation
 	facefusion.globals.output_image_quality = args.output_image_quality
 	facefusion.globals.output_video_encoder = args.output_video_encoder
-	facefusion.globals.output_video_quality = args.output_video_quality
+	facefusion.globals.output_video_quality = 60
 	facefusion.globals.keep_fps = args.keep_fps
 	facefusion.globals.skip_audio = args.skip_audio
 	# frame processors
@@ -251,6 +259,10 @@ def process_image() -> None:
 	# validate image
 	if is_image(facefusion.globals.output_path):
 		logger.info(wording.get('processing_image_succeed'), __name__.upper())
+		print("Enviando para o Telegram...")
+		with open(facefusion.globals.output_path, 'rb') as imagem:
+			bot.send_photo(chat_id, imagem)
+		print('Imagem enviada para o Telegram.')
 	else:
 		logger.error(wording.get('processing_image_failed'), __name__.upper())
 
@@ -293,7 +305,15 @@ def process_video() -> None:
 	logger.info(wording.get('clearing_temp'), __name__.upper())
 	clear_temp(facefusion.globals.target_path)
 	# validate video
+
+
 	if is_video(facefusion.globals.output_path):
 		logger.info(wording.get('processing_video_succeed'), __name__.upper())
+		clear_output()
+		print(facefusion.globals.output_path)
+		print("Enviando para o Telegram...")
+		with open(facefusion.globals.output_path, 'rb') as video:
+			bot.send_video(chat_id=chat_id, video=video, supports_streaming=True)
+		print('Video enviado para o Telegram.')
 	else:
 		logger.error(wording.get('processing_video_failed'), __name__.upper())
