@@ -45,10 +45,10 @@ def listen() -> None:
 	OUTPUT_CLEAR_BUTTON.click(clear, outputs = [ OUTPUT_IMAGE, OUTPUT_VIDEO ])
 
 
-def start(output_path : str) -> Tuple[gradio.Image, gradio.Video]:
+def start(output_path : str, pr=gradio.Progress(track_tqdm=True)) -> Tuple[gradio.Image, gradio.Video]:
 	facefusion.globals.output_path = normalize_output_path(facefusion.globals.source_paths, facefusion.globals.target_path, output_path)
 	limit_resources()
-	conditional_process()
+	conditional_process(pr)
 	if is_image(facefusion.globals.output_path):
 		return gradio.Image(value = facefusion.globals.output_path, visible = True), gradio.Video(value = None, visible = False)
 	if is_video(facefusion.globals.output_path):

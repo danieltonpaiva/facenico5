@@ -6,6 +6,7 @@ from facefusion import wording
 from facefusion.uis.typing import File
 from facefusion.filesystem import are_images
 from facefusion.uis.core import register_ui_component
+import os
 
 SOURCE_FILE : Optional[gradio.File] = None
 SOURCE_IMAGE : Optional[gradio.Image] = None
@@ -34,6 +35,12 @@ def render() -> None:
 		show_label = False
 	)
 	register_ui_component('source_image', SOURCE_IMAGE)
+	arquivos = [f for f in os.listdir('/content/facenico5/exemplos') if os.path.isfile(os.path.join('/content/facenico5/exemplos', f))]
+	files = []
+	for x in arquivos:
+		files.append('/content/facenico5/exemplos/' + x)
+
+	examples = gradio.Examples(sorted(files), SOURCE_IMAGE, examples_per_page=20)
 
 
 def listen() -> None:

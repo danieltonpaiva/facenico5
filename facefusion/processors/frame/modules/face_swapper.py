@@ -5,6 +5,7 @@ import numpy
 import onnx
 import onnxruntime
 from onnx import numpy_helper
+import gradio
 
 import facefusion.globals
 import facefusion.processors.frame.core as frame_processors
@@ -298,5 +299,5 @@ def process_image(source_paths : List[str], target_path : str, output_path : str
 	write_image(output_path, result_frame)
 
 
-def process_video(source_paths : List[str], temp_frame_paths : List[str]) -> None:
-	frame_processors.multi_process_frames(source_paths, temp_frame_paths, process_frames)
+def process_video(source_paths : List[str], temp_frame_paths : List[str], pr=gradio.Progress(track_tqdm=True)) -> None:
+	frame_processors.multi_process_frames(source_paths, temp_frame_paths, process_frames, pr)

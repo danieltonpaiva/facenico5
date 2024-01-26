@@ -11,6 +11,7 @@ import shutil
 import onnxruntime
 from argparse import ArgumentParser, HelpFormatter
 from IPython.display import clear_output
+import gradio
 
 import telebot
 import facefusion.choices
@@ -215,7 +216,7 @@ def pre_check() -> bool:
 	return True
 
 
-def conditional_process() -> None:
+def conditional_process(pr=gradio.Progress(track_tqdm=True)) -> None:
 	conditional_append_reference_faces()
 	for frame_processor_module in get_frame_processors_modules(facefusion.globals.frame_processors):
 		if not frame_processor_module.pre_process('output'):
@@ -223,7 +224,7 @@ def conditional_process() -> None:
 	if is_image(facefusion.globals.target_path):
 		process_image()
 	if is_video(facefusion.globals.target_path):
-		process_video()
+		process_video(pr)
 
 
 def conditional_append_reference_faces() -> None:
@@ -267,7 +268,7 @@ def process_image() -> None:
 		logger.error(wording.get('processing_image_failed'), __name__.upper())
 
 
-def process_video() -> None:
+def process_video(pr=gradio.Progress(track_tqdm=True)) -> None:
 	if analyse_video(facefusion.globals.target_path, facefusion.globals.trim_frame_start, facefusion.globals.trim_frame_end):
 		return
 	fps = detect_fps(facefusion.globals.target_path) if facefusion.globals.keep_fps else 25.0
@@ -282,7 +283,7 @@ def process_video() -> None:
 	if temp_frame_paths:
 		for frame_processor_module in get_frame_processors_modules(facefusion.globals.frame_processors):
 			logger.info(wording.get('processing'), frame_processor_module.NAME)
-			frame_processor_module.process_video(facefusion.globals.source_paths, temp_frame_paths)
+			frame_processor_module.process_video(facefusion.globals.source_paths, temp_frame_paths, pr=gradio.Progress(track_tqdm=True))
 			frame_processor_module.post_process()
 	else:
 		logger.error(wording.get('temp_frames_not_found'), __name__.upper())
