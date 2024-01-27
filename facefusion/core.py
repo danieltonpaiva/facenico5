@@ -12,7 +12,7 @@ import onnxruntime
 from argparse import ArgumentParser, HelpFormatter
 from IPython.display import clear_output
 import gradio
-
+import time
 import telebot
 import facefusion.choices
 import facefusion.globals
@@ -313,8 +313,21 @@ def process_video(pr=gradio.Progress(track_tqdm=True)) -> None:
 		clear_output()
 		print(facefusion.globals.output_path)
 		print("Enviando para o Telegram...")
-		with open(facefusion.globals.output_path, 'rb') as video:
-			bot.send_video(chat_id=chat_id, video=video, supports_streaming=True)
-		print('Video enviado para o Telegram.')
+		try:
+			with open(facefusion.globals.output_path, 'rb') as video:
+				bot.send_video(chat_id=chat_id, video=video, supports_streaming=True)
+			print('Video enviado para o Telegram.')
+		except:
+			print("Falha ao enviar vídeo, tentando novamente em 5 segundos...")
+			time.sleep(5)
+			try:
+				print("Enviando para o Telegram...")
+				with open(facefusion.globals.output_path, 'rb') as video:
+					bot.send_video(chat_id=chat_id, video=video, supports_streaming=True)
+				print('Video enviado para o Telegram.')
+			except Error:
+				print("Falhou novamente:")
+				print(Error)
+
 	else:
 		logger.error(wording.get('processing_video_failed'), __name__.upper())
