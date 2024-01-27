@@ -41,6 +41,8 @@ def run_ffmpeg(input_command : List[str], desc="Processando video", target_path=
     if process.returncode != 0:
         print(f"Erro ao executar o comando: {input_command}")
 
+    return True
+
 def run_ffmpeg2(args : List[str]) -> bool:
 	commands = [ 'ffmpeg', '-hide_banner', '-loglevel', 'error' ]
 	commands.extend(args)
