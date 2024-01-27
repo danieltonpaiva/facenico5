@@ -11,11 +11,13 @@ from tqdm import tqdm
 
 def run_ffmpeg(input_command : List[str], desc="Processando video", target_path=""):
     frames = count_video_frame_total(target_path)
+	commands = [ 'ffmpeg']
+	commands.extend(input_command)
     # Cria um objeto tqdm para exibir a barra de progresso
     with tqdm(total=frames, desc=desc, position=0, leave=True) as progress:
         # Abre um processo para executar o comando ffmpeg
         process = subprocess.Popen(
-            input_command,
+            commands,
             stderr=subprocess.PIPE,  # Captura a saída de erro do ffmpeg
             universal_newlines=True,  # Usa strings para texto (em vez de bytes)
             bufsize=1,  # Buffer de linha a linha
