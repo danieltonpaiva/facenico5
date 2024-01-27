@@ -6,6 +6,7 @@ from facefusion import logger
 from facefusion.filesystem import get_temp_frames_pattern, get_temp_output_video_path
 from facefusion.vision import detect_fps, count_video_frame_total
 import ffmpeg
+import tqdm
 
 
 def run_ffmpeg(input_command : List[str], desc="Processando video", target_path=""):
