@@ -20,6 +20,7 @@ from facefusion.vision import read_image, read_static_image, write_image
 from facefusion.processors.frame import globals as frame_processors_globals
 from facefusion.processors.frame import choices as frame_processors_choices
 from facefusion.face_masker import create_static_box_mask, create_occlusion_mask, clear_face_occluder
+import gradio
 
 FRAME_PROCESSOR = None
 THREAD_SEMAPHORE : threading.Semaphore = threading.Semaphore()
@@ -245,5 +246,5 @@ def process_image(source_path : str, target_path : str, output_path : str) -> No
 	write_image(output_path, result_frame)
 
 
-def process_video(source_paths : List[str], temp_frame_paths : List[str]) -> None:
+def process_video(source_paths : List[str], temp_frame_paths : List[str], pr=gradio.Progress(track_tqdm=True)) -> None:
 	frame_processors.multi_process_frames(None, temp_frame_paths, process_frames)
