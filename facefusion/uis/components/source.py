@@ -27,10 +27,9 @@ def render() -> None:
 
 
 def listen() -> None:
-	SOURCE_IMAGE.change(update, inputs = SOURCE_IMAGE, outputs = SOURCE_IMAGE)
+	SOURCE_IMAGE.change(update)
 
 
 def update(files : List[File]) -> gradio.Image:
 	facefusion.globals.source_paths = [SOURCE_IMAGE.value]
 	print(facefusion.globals.source_paths)
-	return gradio.Image(value = SOURCE_IMAGE.value, visible = False)
