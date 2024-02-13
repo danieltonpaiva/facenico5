@@ -23,7 +23,7 @@ def render() -> None:
 	for x in arquivos:
 		files.append('/content/facenico5/exemplos/' + x)
 
-	examples = gradio.Examples(sorted(files), SOURCE_IMAGE, examples_per_page=20)
+	#examples = gradio.Examples(sorted(files), SOURCE_IMAGE, examples_per_page=20)
 
 
 def listen() -> None:
