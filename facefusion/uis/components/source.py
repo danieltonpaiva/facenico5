@@ -16,6 +16,7 @@ def render() -> None:
 	SOURCE_IMAGE = gradio.Image(
 		type="filepath",
 		visible = True,
+		sources=['upload', 'webcam', 'clipboard']
 	)
 	register_ui_component('source_image', SOURCE_IMAGE)
 	arquivos = [f for f in os.listdir('/content/facenico5/exemplos') if os.path.isfile(os.path.join('/content/facenico5/exemplos', f))]
