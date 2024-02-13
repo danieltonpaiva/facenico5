@@ -14,8 +14,8 @@ SOURCE_IMAGE : Optional[gradio.Image] = None
 def render() -> None:
 	global SOURCE_IMAGE
 	SOURCE_IMAGE = gradio.Image(
+		type="filepath",
 		visible = True,
-		show_label = False
 	)
 	register_ui_component('source_image', SOURCE_IMAGE)
 	arquivos = [f for f in os.listdir('/content/facenico5/exemplos') if os.path.isfile(os.path.join('/content/facenico5/exemplos', f))]
