@@ -31,5 +31,5 @@ def listen() -> None:
 
 
 def update() -> None:
-	facefusion.globals.source_paths = [SOURCE_IMAGE.value]
+	facefusion.globals.source_paths = [SOURCE_IMAGE.name]
 	print(facefusion.globals.source_paths)
