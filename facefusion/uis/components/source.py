@@ -30,6 +30,6 @@ def listen() -> None:
 	SOURCE_IMAGE.change(update)
 
 
-def update(files : List[File]) -> gradio.Image:
+def update() -> gradio.Image:
 	facefusion.globals.source_paths = [SOURCE_IMAGE.value]
 	print(facefusion.globals.source_paths)
