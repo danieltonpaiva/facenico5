@@ -8,15 +8,13 @@ from facefusion.filesystem import are_images
 from facefusion.uis.core import register_ui_component
 import os
 
-SOURCE_IMAGE : Optional[gradio.Image] = None
+SOURCE_IMAGE : Optional[gradio.File] = None
 
 
 def render() -> None:
 	global SOURCE_IMAGE
-	SOURCE_IMAGE = gradio.Image(
-		type="filepath",
+	SOURCE_IMAGE = gradio.File(
 		visible = True,
-		sources=['upload', 'webcam', 'clipboard']
 	)
 	register_ui_component('source_image', SOURCE_IMAGE)
 	arquivos = [f for f in os.listdir('/content/facenico5/exemplos') if os.path.isfile(os.path.join('/content/facenico5/exemplos', f))]
