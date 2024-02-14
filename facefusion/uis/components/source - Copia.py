@@ -34,10 +34,10 @@ def render() -> None:
 		show_label = False
 	)
 	register_ui_component('source_image', SOURCE_IMAGE)
-	arquivos = [f for f in os.listdir('/content/facenico5/exemplos') if os.path.isfile(os.path.join('/content/facenico5/exemplos', f))]
+	arquivos = [f for f in os.listdir('/kaggle/working/facenico6/exemplos') if os.path.isfile(os.path.join('/kaggle/working/facenico6/exemplos', f))]
 	files = []
 	for x in arquivos:
-		files.append('/content/facenico5/exemplos/' + x)
+		files.append('/kaggle/working/facenico6/exemplos/' + x)
 
 	examples = gradio.Examples(sorted(files), SOURCE_FILE, examples_per_page=20)
 

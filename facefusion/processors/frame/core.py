@@ -5,7 +5,6 @@ from queue import Queue
 from types import ModuleType
 from typing import Any, List
 from tqdm import tqdm
-import gradio
 
 import facefusion.globals
 from facefusion.typing import Process_Frames
@@ -64,7 +63,7 @@ def clear_frame_processors_modules() -> None:
 	FRAME_PROCESSORS_MODULES = []
 
 
-def multi_process_frames2(source_paths : List[str], temp_frame_paths : List[str], process_frames : Process_Frames, pr=gradio.Progress(track_tqdm=True)) -> None:
+def multi_process_frames(source_paths : List[str], temp_frame_paths : List[str], process_frames : Process_Frames) -> None:
 	with tqdm(total = len(temp_frame_paths), desc = wording.get('processing'), unit = 'frame', ascii = ' =', disable = facefusion.globals.log_level in [ 'warn', 'error' ]) as progress:
 		progress.set_postfix(
 		{
@@ -83,12 +82,6 @@ def multi_process_frames2(source_paths : List[str], temp_frame_paths : List[str]
 			for future_done in as_completed(futures):
 				future_done.result()
 
-
-def multi_process_frames(source_paths : List[str], temp_frame_paths : List[str], process_frames : Process_Frames, pr=gradio.Progress(track_tqdm=True)) -> None:
-	print('esta processando....')
-	with tqdm(total = len(temp_frame_paths), desc = wording.get('processing'), unit = 'frame', ascii = ' =', disable = facefusion.globals.log_level in [ 'warn', 'error' ]) as progress:
-		for temp_frame_path in temp_frame_paths:
-			process_frames(source_paths, [temp_frame_path], progress.update)
 
 def create_queue(temp_frame_paths : List[str]) -> Queue[str]:
 	queue : Queue[str] = Queue()

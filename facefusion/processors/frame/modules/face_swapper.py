@@ -5,7 +5,7 @@ import numpy
 import onnx
 import onnxruntime
 from onnx import numpy_helper
-import gradio
+import os
 
 import facefusion.globals
 import facefusion.processors.frame.core as frame_processors
@@ -261,12 +261,16 @@ def get_reference_frame(source_face : Face, target_face : Face, temp_frame : Fra
 	return swap_face(source_face, target_face, temp_frame)
 
 
-def process_frame(source_face : Face, reference_faces : FaceSet, temp_frame : Frame) -> Frame:
+def process_frame(source_face : Face, reference_faces : FaceSet, temp_frame : Frame, temp_frame_path="") -> Frame:
 	if 'reference' in facefusion.globals.face_selector_mode:
 		similar_faces = find_similar_faces(temp_frame, reference_faces, facefusion.globals.reference_face_distance)
 		if similar_faces:
 			for similar_face in similar_faces:
 				temp_frame = swap_face(source_face, similar_face, temp_frame)
+		else:
+			if(temp_frame_path != "" and facefusion.globals.skip_audio):
+				os.remove(temp_frame_path)
+				return False
 	if 'one' in facefusion.globals.face_selector_mode:
 		target_face = get_one_face(temp_frame)
 		if target_face:
@@ -285,8 +289,9 @@ def process_frames(source_paths : List[str], temp_frame_paths : List[str], updat
 	reference_faces = get_reference_faces() if 'reference' in facefusion.globals.face_selector_mode else None
 	for temp_frame_path in temp_frame_paths:
 		temp_frame = read_image(temp_frame_path)
-		result_frame = process_frame(source_face, reference_faces, temp_frame)
-		write_image(temp_frame_path, result_frame)
+		result_frame = process_frame(source_face, reference_faces, temp_frame, temp_frame_path)
+		if os.path.exists(temp_frame_path):
+			write_image(temp_frame_path, result_frame)
 		update_progress()
 
 
@@ -299,5 +304,5 @@ def process_image(source_paths : List[str], target_path : str, output_path : str
 	write_image(output_path, result_frame)
 
 
-def process_video(source_paths : List[str], temp_frame_paths : List[str], pr=gradio.Progress(track_tqdm=True)) -> None:
-	frame_processors.multi_process_frames(source_paths, temp_frame_paths, process_frames, pr)
+def process_video(source_paths : List[str], temp_frame_paths : List[str]) -> None:
+	frame_processors.multi_process_frames(source_paths, temp_frame_paths, process_frames)

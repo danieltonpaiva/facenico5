@@ -52,49 +52,6 @@ def render() -> gradio.Blocks:
 					face_analyser.render()
 	return layout
 
-def render2() -> gradio.Blocks:
-	with gradio.Blocks() as layout:
-		with gradio.Tab("Configurações"):
-			with gradio.Row():
-				with gradio.Column(scale = 2):
-					with gradio.Blocks():
-						about.render()
-					with gradio.Blocks():
-						frame_processors.render()
-						frame_processors_options.render()
-					with gradio.Blocks():
-						execution.render()
-						execution_thread_count.render()
-						execution_queue_count.render()
-					with gradio.Blocks():
-						limit_resources.render()
-					with gradio.Blocks():
-						temp_frame.render()
-					with gradio.Blocks():
-						output_options.render()
-					with gradio.Blocks():
-						common_options.render()
-					with gradio.Blocks():
-						face_masker.render()
-					with gradio.Blocks():
-						face_analyser.render()
-		with gradio.Tab("Execução"):
-			with gradio.Row():
-				with gradio.Column(scale = 2):
-					with gradio.Blocks():
-						source.render()
-					with gradio.Blocks():
-						target.render()
-				with gradio.Column(scale = 3):
-					with gradio.Blocks():
-						preview.render()
-					with gradio.Blocks():
-						trim_frame.render()
-					with gradio.Blocks():
-						face_selector.render()
-					with gradio.Blocks():
-						output.render()
-	return layout
 
 def listen() -> None:
 	frame_processors.listen()
@@ -117,5 +74,4 @@ def listen() -> None:
 
 
 def run(ui : gradio.Blocks) -> None:
-	ui.queue()
 	ui.launch(show_api = False, share=True)

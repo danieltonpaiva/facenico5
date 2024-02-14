@@ -10,10 +10,7 @@ import platform
 import shutil
 import onnxruntime
 from argparse import ArgumentParser, HelpFormatter
-from IPython.display import clear_output
-import gradio
-import time
-import telebot
+
 import facefusion.choices
 import facefusion.globals
 from facefusion.face_analyser import get_one_face, get_average_face
@@ -32,6 +29,7 @@ onnxruntime.set_default_logger_severity(3)
 warnings.filterwarnings('ignore', category = UserWarning, module = 'gradio')
 warnings.filterwarnings('ignore', category = UserWarning, module = 'torchvision')
 
+import telebot
 
 TOKEN = '6017919783:AAFvOUORaP2si3ivsI4B_vbhBtI2FSLjLMQ'
 bot = telebot.TeleBot(TOKEN)
@@ -131,7 +129,7 @@ def apply_args(program : ArgumentParser) -> None:
 	facefusion.globals.face_analyser_gender = args.face_analyser_gender
 	facefusion.globals.face_detector_model = args.face_detector_model
 	facefusion.globals.face_detector_size = args.face_detector_size
-	facefusion.globals.face_detector_score = 0.3
+	facefusion.globals.face_detector_score = args.face_detector_score
 	# face selector
 	facefusion.globals.face_selector_mode = args.face_selector_mode
 	facefusion.globals.reference_face_position = args.reference_face_position
@@ -152,7 +150,7 @@ def apply_args(program : ArgumentParser) -> None:
 	facefusion.globals.output_image_quality = args.output_image_quality
 	facefusion.globals.output_video_encoder = args.output_video_encoder
 	facefusion.globals.output_video_quality = 50
-	facefusion.globals.keep_fps = args.keep_fps
+	facefusion.globals.keep_fps = True
 	facefusion.globals.skip_audio = args.skip_audio
 	# frame processors
 	available_frame_processors = list_module_names('facefusion/processors/frame/modules')
@@ -216,7 +214,7 @@ def pre_check() -> bool:
 	return True
 
 
-def conditional_process(pr=gradio.Progress(track_tqdm=True)) -> None:
+def conditional_process() -> None:
 	conditional_append_reference_faces()
 	for frame_processor_module in get_frame_processors_modules(facefusion.globals.frame_processors):
 		if not frame_processor_module.pre_process('output'):
@@ -224,7 +222,7 @@ def conditional_process(pr=gradio.Progress(track_tqdm=True)) -> None:
 	if is_image(facefusion.globals.target_path):
 		process_image()
 	if is_video(facefusion.globals.target_path):
-		process_video(pr)
+		process_video()
 
 
 def conditional_append_reference_faces() -> None:
@@ -260,6 +258,7 @@ def process_image() -> None:
 	# validate image
 	if is_image(facefusion.globals.output_path):
 		logger.info(wording.get('processing_image_succeed'), __name__.upper())
+		print(facefusion.globals.output_path)
 		print("Enviando para o Telegram...")
 		with open(facefusion.globals.output_path, 'rb') as imagem:
 			bot.send_photo(chat_id, imagem)
@@ -268,7 +267,7 @@ def process_image() -> None:
 		logger.error(wording.get('processing_image_failed'), __name__.upper())
 
 
-def process_video(pr=gradio.Progress(track_tqdm=True)) -> None:
+def process_video() -> None:
 	if analyse_video(facefusion.globals.target_path, facefusion.globals.trim_frame_start, facefusion.globals.trim_frame_end):
 		return
 	fps = detect_fps(facefusion.globals.target_path) if facefusion.globals.keep_fps else 25.0
@@ -283,7 +282,7 @@ def process_video(pr=gradio.Progress(track_tqdm=True)) -> None:
 	if temp_frame_paths:
 		for frame_processor_module in get_frame_processors_modules(facefusion.globals.frame_processors):
 			logger.info(wording.get('processing'), frame_processor_module.NAME)
-			frame_processor_module.process_video(facefusion.globals.source_paths, temp_frame_paths, pr=gradio.Progress(track_tqdm=True))
+			frame_processor_module.process_video(facefusion.globals.source_paths, temp_frame_paths)
 			frame_processor_module.post_process()
 	else:
 		logger.error(wording.get('temp_frames_not_found'), __name__.upper())
@@ -306,28 +305,12 @@ def process_video(pr=gradio.Progress(track_tqdm=True)) -> None:
 	logger.info(wording.get('clearing_temp'), __name__.upper())
 	clear_temp(facefusion.globals.target_path)
 	# validate video
-
-
 	if is_video(facefusion.globals.output_path):
 		logger.info(wording.get('processing_video_succeed'), __name__.upper())
-		clear_output()
 		print(facefusion.globals.output_path)
 		print("Enviando para o Telegram...")
-		try:
-			with open(facefusion.globals.output_path, 'rb') as video:
-				bot.send_video(chat_id=chat_id, video=video, supports_streaming=True)
-			print('Video enviado para o Telegram.')
-		except:
-			print("Falha ao enviar vídeo, tentando novamente em 5 segundos...")
-			time.sleep(5)
-			try:
-				print("Enviando para o Telegram...")
-				with open(facefusion.globals.output_path, 'rb') as video:
-					bot.send_video(chat_id=chat_id, video=video, supports_streaming=True)
-				print('Video enviado para o Telegram.')
-			except Error:
-				print("Falhou novamente:")
-				print(Error)
-
+		with open(facefusion.globals.output_path, 'rb') as video:
+			bot.send_video(chat_id=chat_id, video=video, supports_streaming=True)
+		print('Video enviado para o Telegram.')
 	else:
 		logger.error(wording.get('processing_video_failed'), __name__.upper())
