@@ -76,6 +76,7 @@ def extract_frames(target_path : str, fps : float) -> bool:
 	else:
 		commands.extend([ '-vf', 'fps=' + str(fps) ])
 	commands.extend([ '-vsync', '0', temp_frames_pattern ])
+	commands.extend([ '-c:v', 'h264_cuvid ' ])
 	return run_ffmpeg(commands, "Extraindo frames", len(os.listdir(get_temp_directory_path(target_path))))
 
 
