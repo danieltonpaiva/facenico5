@@ -22,7 +22,7 @@ from facefusion.processors.frame.core import get_frame_processors_modules, load_
 from facefusion.cli_helper import create_metavar
 from facefusion.execution_helper import encode_execution_providers, decode_execution_providers
 from facefusion.normalizer import normalize_output_path, normalize_padding
-from facefusion.filesystem import is_image, is_video, list_module_names, get_temp_frame_paths, create_temp, move_temp, clear_temp
+from facefusion.filesystem import is_image, is_video, list_module_names, get_temp_frame_paths, create_temp, move_temp, clear_temp, get_temp_directory_path
 from facefusion.ffmpeg import extract_frames, compress_image, merge_video, restore_audio
 
 onnxruntime.set_default_logger_severity(3)
@@ -303,14 +303,15 @@ def process_video() -> None:
 			move_temp(facefusion.globals.target_path, facefusion.globals.output_path)
 	# clear temp
 	logger.info(wording.get('clearing_temp'), __name__.upper())
-	clear_temp(facefusion.globals.target_path)
+	
 	# validate video
 	if is_video(facefusion.globals.output_path):
 		logger.info(wording.get('processing_video_succeed'), __name__.upper())
 		print(facefusion.globals.output_path)
 		print("Enviando para o Telegram...")
 		with open(facefusion.globals.output_path, 'rb') as video:
-			bot.send_video(chat_id=chat_id, video=video, supports_streaming=True)
+			bot.send_video(chat_id=chat_id, video=video, supports_streaming=True, thumb=get_temp_directory_path(target_path)+'/0001.jpg')
 		print('Video enviado para o Telegram.')
+		clear_temp(facefusion.globals.target_path)
 	else:
 		logger.error(wording.get('processing_video_failed'), __name__.upper())
