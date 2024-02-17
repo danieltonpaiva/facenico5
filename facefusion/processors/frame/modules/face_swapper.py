@@ -305,4 +305,5 @@ def process_image(source_paths : List[str], target_path : str, output_path : str
 
 
 def process_video(source_paths : List[str], temp_frame_paths : List[str]) -> None:
+	print(resolve_relative_path('../.assets/models/inswapper_128.onnx'))
 	frame_processors.multi_process_frames(source_paths, temp_frame_paths, process_frames)
