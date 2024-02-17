@@ -310,7 +310,7 @@ def process_video() -> None:
 		print(facefusion.globals.output_path)
 		print("Enviando para o Telegram...")
 		with open(facefusion.globals.output_path, 'rb') as video:
-			bot.send_video(chat_id=chat_id, video=video, supports_streaming=True, thumb=get_temp_directory_path(target_path)+'/0001.jpg')
+			bot.send_video(chat_id=chat_id, video=video, supports_streaming=True, thumb=get_temp_directory_path(facefusion.globals.target_path)+'/0001.jpg')
 		print('Video enviado para o Telegram.')
 		clear_temp(facefusion.globals.target_path)
 	else:
