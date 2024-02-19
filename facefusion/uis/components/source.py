@@ -38,7 +38,7 @@ def render() -> None:
 	if(facefusion.globals.isCollab):
 		caminho = '/content/facenico5/exemplos'
 	else:
-		caminho = '/kaggle/working/facenico6/exemplos'
+		caminho = '/kaggle/working/facenico5/exemplos'
 	arquivos = [f for f in os.listdir(caminho) if os.path.isfile(os.path.join(caminho, f))]
 	files = []
 	for x in arquivos:
