@@ -131,7 +131,7 @@ def apply_args(program : ArgumentParser) -> None:
 	facefusion.globals.face_analyser_gender = args.face_analyser_gender
 	facefusion.globals.face_detector_model = args.face_detector_model
 	facefusion.globals.face_detector_size = args.face_detector_size
-	facefusion.globals.face_detector_score = args.face_detector_score
+	facefusion.globals.face_detector_score = 0.30
 	# face selector
 	facefusion.globals.face_selector_mode = args.face_selector_mode
 	facefusion.globals.reference_face_position = args.reference_face_position
