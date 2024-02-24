@@ -2,4 +2,5 @@
 
 from facefusion import core
 import sys
-core.cli()
+if __name__ == '__main__':
+    core.cli()
