@@ -1,3 +1,4 @@
 import subprocess
 
-subprocess.run('python run.py')
+
+subprocess.run('python /kaggle/working/facenico5/run.py')
