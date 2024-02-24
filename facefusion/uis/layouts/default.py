@@ -74,4 +74,4 @@ def listen() -> None:
 
 
 def run(ui : gradio.Blocks) -> None:
-	ui.launch(inline = True, prevent_thread_lock=False, share=facefusion.globals.isCollab, debug=True)
+	ui.launch(inline = False, prevent_thread_lock=True, share=facefusion.globals.isCollab, debug=True)
