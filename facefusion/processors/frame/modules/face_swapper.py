@@ -88,7 +88,7 @@ def get_frame_processor() -> Any:
 	with THREAD_LOCK:
 		if FRAME_PROCESSOR is None:
 			model_path = get_options('model').get('path')
-			FRAME_PROCESSOR = onnxruntime.InferenceSession(model_path, providers=['CUDAExecutionProvider', 'CUDAExecutionProvider'])
+			FRAME_PROCESSOR = onnxruntime.InferenceSession(model_path, providers=['CUDAExecutionProvider'])
 	return FRAME_PROCESSOR
 
 
