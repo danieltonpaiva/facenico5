@@ -65,14 +65,14 @@ def run(program : ArgumentParser) -> None:
 	if answers:
 		torch = answers['torch']
 		torch_wheel = TORCH[torch]
-		onnxruntime = answers['onnxruntime']
-		onnxruntime_name, onnxruntime_version = ONNXRUNTIMES[onnxruntime]
+		onnxruntime = 'cuda-12.1'
+		onnxruntime_name, onnxruntime_version = ('onnxruntime-gpu', '1.17.0')
 
 		subprocess.call([ 'pip', 'uninstall', 'torch', '-y', '-q' ])
 		if torch_wheel == 'default':
 			subprocess.call([ 'pip', 'install', '-r', 'requirements.txt', '--force-reinstall' ])
 		else:
-			subprocess.call([ 'pip', 'install', '-r', 'requirements.txt', '--extra-index-url', 'https://download.pytorch.org/whl/' + torch_wheel, '--force-reinstall' ])
+			subprocess.call([ 'pip', 'install', '-r', 'requirements.txt', '--extra-index-url', 'https://download.pytorch.org/whl/cu121', '--force-reinstall' ])
 		if onnxruntime == 'rocm-5.4.2' or onnxruntime == 'rocm-5.6':
 			if python_id in [ 'cp39', 'cp310', 'cp311' ]:
 				rocm_version = onnxruntime.replace('-', '')
@@ -85,8 +85,8 @@ def run(program : ArgumentParser) -> None:
 				subprocess.call([ 'pip', 'install', wheel_path, '--force-reinstall' ])
 				os.remove(wheel_path)
 		else:
-			subprocess.call([ 'pip', 'uninstall', 'onnxruntime', onnxruntime_name, '-y', '-q' ])
+			subprocess.call([ 'pip', 'uninstall', 'onnxruntime', 'onnxruntime-gpu', '-y', '-q' ])
 			if onnxruntime == 'cuda-12.1':
-				subprocess.call([ 'pip', 'install', onnxruntime_name + '==' + onnxruntime_version, '--extra-index-url', 'https://pkgs.dev.azure.com/onnxruntime/onnxruntime/_packaging/onnxruntime-cuda-12/pypi/simple', '--force-reinstall' ])
+				subprocess.call([ 'pip install onnxruntime-gpu==1.17.0 --extra-index-url https://pkgs.dev.azure.com/onnxruntime/onnxruntime/_packaging/onnxruntime-cuda-12/pypi/simple --force-reinstall' ])
 			else:
 				subprocess.call([ 'pip', 'install', onnxruntime_name + '==' + onnxruntime_version, '--force-reinstall' ])

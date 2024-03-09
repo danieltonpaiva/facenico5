@@ -74,4 +74,4 @@ def listen() -> None:
 
 
 def run(ui : gradio.Blocks) -> None:
-	ui.launch(show_api=False, share=facefusion.globals.isCollab)
+	ui.queue().launch(show_api=False, share=facefusion.globals.isCollab)
