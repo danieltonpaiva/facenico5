@@ -266,8 +266,7 @@ def process_frame(source_face : Face, reference_faces : FaceSet, temp_frame : Fr
 		similar_faces = find_similar_faces(temp_frame, reference_faces, facefusion.globals.reference_face_distance)
 		if similar_faces:
 			for similar_face in similar_faces:
-				pass
-				#temp_frame = swap_face(source_face, similar_face, temp_frame)
+				temp_frame = swap_face(source_face, similar_face, temp_frame)
 		else:
 			if(temp_frame_path != "" and facefusion.globals.skip_audio):
 				os.remove(temp_frame_path)
