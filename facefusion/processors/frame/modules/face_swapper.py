@@ -284,7 +284,7 @@ def process_frame(source_face : Face, reference_faces : FaceSet, temp_frame : Fr
 	return temp_frame
 
 
-def process_frames2(source_paths : List[str], temp_frame_paths : List[str], update_progress : Update_Process) -> None:
+def process_frames(source_paths : List[str], temp_frame_paths : List[str], update_progress : Update_Process) -> None:
 	source_frames = read_static_images(source_paths)
 	source_face = get_average_face(source_frames)
 	reference_faces = get_reference_faces() if 'reference' in facefusion.globals.face_selector_mode else None
@@ -295,7 +295,7 @@ def process_frames2(source_paths : List[str], temp_frame_paths : List[str], upda
 			write_image(temp_frame_path, result_frame)
 		update_progress()
 
-def process_frames(source_paths : List[str], temp_frame_paths : List[str]) -> None:
+def process_frames2(source_paths : List[str], temp_frame_paths : List[str]) -> None:
 	source_frames = read_static_images(source_paths)
 	source_face = get_average_face(source_frames)
 	print('...')
@@ -318,5 +318,5 @@ def process_image(source_paths : List[str], target_path : str, output_path : str
 
 
 def process_video(source_paths : List[str], temp_frame_paths : List[str]) -> None:
-	process_frames(source_paths, temp_frame_paths)
-	#frame_processors.multi_process_frames(source_paths, temp_frame_paths, process_frames)
+	#process_frames(source_paths, temp_frame_paths)
+	frame_processors.multi_process_frames(source_paths, temp_frame_paths, process_frames)
