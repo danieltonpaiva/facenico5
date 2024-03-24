@@ -306,6 +306,7 @@ def process_frames(source_paths : List[str], temp_frame_paths : List[str]) -> No
 			result_frame = process_frame(source_face, reference_faces, temp_frame, temp_frame_path)
 			if os.path.exists(temp_frame_path):
 				write_image(temp_frame_path, result_frame)
+			progress.update()
 
 def process_image(source_paths : List[str], target_path : str, output_path : str) -> None:
 	source_frames = read_static_images(source_paths)
