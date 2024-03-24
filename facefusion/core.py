@@ -281,40 +281,46 @@ def process_video() -> None:
 	extract_frames(facefusion.globals.target_path, fps)
 	# process frame
 	temp_frame_paths = get_temp_frame_paths(facefusion.globals.target_path)
+
+	def merge():
+		logger.info(wording.get('merging_video_fps').format(fps = fps), __name__.upper())
+		if not merge_video(facefusion.globals.target_path, fps):
+			logger.error(wording.get('merging_video_failed'), __name__.upper())
+			return
+		# handle audio
+		if facefusion.globals.skip_audio:
+			logger.info(wording.get('skipping_audio'), __name__.upper())
+			move_temp(facefusion.globals.target_path, facefusion.globals.output_path)
+		else:
+			logger.info(wording.get('restoring_audio'), __name__.upper())
+			if not restore_audio(facefusion.globals.target_path, facefusion.globals.output_path):
+				logger.warn(wording.get('restoring_audio_skipped'), __name__.upper())
+				move_temp(facefusion.globals.target_path, facefusion.globals.output_path)
+		# clear temp
+		logger.info(wording.get('clearing_temp'), __name__.upper())
+		
+		# validate video
+		if is_video(facefusion.globals.output_path):
+			logger.info(wording.get('processing_video_succeed'), __name__.upper())
+			print(facefusion.globals.output_path)
+			print("Enviando para o Telegram...")
+			with open(facefusion.globals.output_path, 'rb') as video:
+				bot.send_video(chat_id=chat_id, video=video, supports_streaming=True, thumb=get_temp_directory_path(facefusion.globals.target_path)+'/0001.jpg')
+			print('Video enviado para o Telegram.')
+			
+		else:
+			logger.error(wording.get('processing_video_failed'), __name__.upper())
+	
 	if temp_frame_paths:
 		for frame_processor_module in get_frame_processors_modules(facefusion.globals.frame_processors):
 			temp_frame_paths = get_temp_frame_paths(facefusion.globals.target_path)
 			logger.info(wording.get('processing'), frame_processor_module.NAME)
 			frame_processor_module.process_video(facefusion.globals.source_paths, temp_frame_paths)
 			frame_processor_module.post_process()
+			merge()
 	else:
 		logger.error(wording.get('temp_frames_not_found'), __name__.upper())
 		return
 	# merge video
-	logger.info(wording.get('merging_video_fps').format(fps = fps), __name__.upper())
-	if not merge_video(facefusion.globals.target_path, fps):
-		logger.error(wording.get('merging_video_failed'), __name__.upper())
-		return
-	# handle audio
-	if facefusion.globals.skip_audio:
-		logger.info(wording.get('skipping_audio'), __name__.upper())
-		move_temp(facefusion.globals.target_path, facefusion.globals.output_path)
-	else:
-		logger.info(wording.get('restoring_audio'), __name__.upper())
-		if not restore_audio(facefusion.globals.target_path, facefusion.globals.output_path):
-			logger.warn(wording.get('restoring_audio_skipped'), __name__.upper())
-			move_temp(facefusion.globals.target_path, facefusion.globals.output_path)
-	# clear temp
-	logger.info(wording.get('clearing_temp'), __name__.upper())
-	
-	# validate video
-	if is_video(facefusion.globals.output_path):
-		logger.info(wording.get('processing_video_succeed'), __name__.upper())
-		print(facefusion.globals.output_path)
-		print("Enviando para o Telegram...")
-		with open(facefusion.globals.output_path, 'rb') as video:
-			bot.send_video(chat_id=chat_id, video=video, supports_streaming=True, thumb=get_temp_directory_path(facefusion.globals.target_path)+'/0001.jpg')
-		print('Video enviado para o Telegram.')
-		clear_temp(facefusion.globals.target_path)
-	else:
-		logger.error(wording.get('processing_video_failed'), __name__.upper())
+
+	clear_temp(facefusion.globals.target_path)
