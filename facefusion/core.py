@@ -315,9 +315,7 @@ def process_video() -> None:
 		for frame_processor_module in get_frame_processors_modules(facefusion.globals.frame_processors):
 			temp_frame_paths = get_temp_frame_paths(facefusion.globals.target_path)
 			logger.info(wording.get('processing'), frame_processor_module.NAME)
-			frame_processor_module.process_video(facefusion.globals.source_paths, temp_frame_paths, 1)
-			merge()
-			frame_processor_module.process_video(facefusion.globals.source_paths, temp_frame_paths, 2)
+			frame_processor_module.process_video(facefusion.globals.source_paths, temp_frame_paths)
 			frame_processor_module.post_process()
 			merge()
 	else:
