@@ -284,10 +284,11 @@ def process_frame(source_face : Face, reference_faces : FaceSet, temp_frame : Fr
 	return temp_frame
 
 
-def process_frames(source_paths : List[str], temp_frame_paths : List[str], update_progress : Update_Process) -> None:
+def process_frames2(source_paths : List[str], temp_frame_paths : List[str], update_progress : Update_Process, parte=1) -> None:
 	source_frames = read_static_images(source_paths)
 	source_face = get_average_face(source_frames)
 	reference_faces = get_reference_faces() if 'reference' in facefusion.globals.face_selector_mode else None
+
 	for temp_frame_path in temp_frame_paths:
 		temp_frame = read_image(temp_frame_path)
 		result_frame = process_frame(source_face, reference_faces, temp_frame, temp_frame_path)
@@ -295,18 +296,18 @@ def process_frames(source_paths : List[str], temp_frame_paths : List[str], updat
 			write_image(temp_frame_path, result_frame)
 		update_progress()
 
-def process_frames2(source_paths : List[str], temp_frame_paths : List[str]) -> None:
+def process_frames(source_paths : List[str], temp_frame_paths : List[str], update_progress : Update_Process, parte=1) -> None:
 	source_frames = read_static_images(source_paths)
 	source_face = get_average_face(source_frames)
-	print('...')
 	reference_faces = get_reference_faces() if 'reference' in facefusion.globals.face_selector_mode else None
-	with tqdm(total = len(temp_frame_paths), desc = wording.get('processing'), unit = 'frame', ascii = ' =', disable = facefusion.globals.log_level in [ 'warn', 'error' ]) as progress:
-		for temp_frame_path in temp_frame_paths:
-			temp_frame = read_image(temp_frame_path)
-			result_frame = process_frame(source_face, reference_faces, temp_frame, temp_frame_path)
-			if os.path.exists(temp_frame_path):
-				write_image(temp_frame_path, result_frame)
-			progress.update()
+	metade = len(temp_frame_paths) // 2
+
+	for temp_frame_path in temp_frame_paths[:metade]:
+		temp_frame = read_image(temp_frame_path)
+		result_frame = process_frame(source_face, reference_faces, temp_frame, temp_frame_path)
+		if os.path.exists(temp_frame_path):
+			write_image(temp_frame_path, result_frame)
+		update_progress()
 
 def process_image(source_paths : List[str], target_path : str, output_path : str) -> None:
 	source_frames = read_static_images(source_paths)
