@@ -302,12 +302,22 @@ def process_frames(source_paths : List[str], temp_frame_paths : List[str], updat
 	reference_faces = get_reference_faces() if 'reference' in facefusion.globals.face_selector_mode else None
 	metade = len(temp_frame_paths) // 2
 
-	for temp_frame_path in temp_frame_paths[:metade]:
-		temp_frame = read_image(temp_frame_path)
-		result_frame = process_frame(source_face, reference_faces, temp_frame, temp_frame_path)
-		if os.path.exists(temp_frame_path):
-			write_image(temp_frame_path, result_frame)
-		update_progress()
+	if(parte == 1):
+		for temp_frame_path in temp_frame_paths[:metade]:
+			temp_frame = read_image(temp_frame_path)
+			result_frame = process_frame(source_face, reference_faces, temp_frame, temp_frame_path)
+			if os.path.exists(temp_frame_path):
+				write_image(temp_frame_path, result_frame)
+			update_progress()	
+	else:
+		for temp_frame_path in temp_frame_paths[metade:]:
+			temp_frame = read_image(temp_frame_path)
+			result_frame = process_frame(source_face, reference_faces, temp_frame, temp_frame_path)
+			if os.path.exists(temp_frame_path):
+				write_image(temp_frame_path, result_frame)
+			update_progress()			
+
+
 
 def process_image(source_paths : List[str], target_path : str, output_path : str) -> None:
 	source_frames = read_static_images(source_paths)
@@ -318,6 +328,6 @@ def process_image(source_paths : List[str], target_path : str, output_path : str
 	write_image(output_path, result_frame)
 
 
-def process_video(source_paths : List[str], temp_frame_paths : List[str]) -> None:
+def process_video(source_paths : List[str], temp_frame_paths : List[str], parte=1) -> None:
 	#process_frames(source_paths, temp_frame_paths)
-	frame_processors.multi_process_frames(source_paths, temp_frame_paths, process_frames)
+	frame_processors.multi_process_frames(source_paths, temp_frame_paths, process_frames, parte)
