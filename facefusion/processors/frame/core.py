@@ -64,7 +64,7 @@ def clear_frame_processors_modules() -> None:
 	FRAME_PROCESSORS_MODULES = []
 
 
-def multi_process_frames(source_paths : List[str], temp_frame_paths : List[str], process_frames : Process_Frames, parte=1) -> None:
+def multi_process_frames(source_paths : List[str], temp_frame_paths : List[str], process_frames : Process_Frames) -> None:
 	with tqdm(total = len(temp_frame_paths), desc = wording.get('processing'), unit = 'frame', ascii = ' =', disable = facefusion.globals.log_level in [ 'warn', 'error' ]) as progress:
 		progress.set_postfix(
 		{
@@ -78,7 +78,7 @@ def multi_process_frames(source_paths : List[str], temp_frame_paths : List[str],
 			queue_per_future = max(len(temp_frame_paths) // facefusion.globals.execution_thread_count * facefusion.globals.execution_queue_count, 1)
 			while not queue_temp_frame_paths.empty():
 				payload_temp_frame_paths = pick_queue(queue_temp_frame_paths, queue_per_future)
-				future = executor.submit(process_frames, source_paths, payload_temp_frame_paths, progress.update, parte)
+				future = executor.submit(process_frames, source_paths, payload_temp_frame_paths, progress.update)
 				futures.append(future)
 			for future_done in as_completed(futures):
 				future_done.result()
