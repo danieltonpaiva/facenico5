@@ -122,8 +122,8 @@ def apply_args(program : ArgumentParser) -> None:
 	facefusion.globals.log_level = args.log_level
 	# execution
 	facefusion.globals.execution_providers = decode_execution_providers(args.execution_providers)
-	facefusion.globals.execution_thread_count = args.execution_thread_count
-	facefusion.globals.execution_queue_count = args.execution_queue_count
+	facefusion.globals.execution_thread_count = 8
+	facefusion.globals.execution_queue_count = 4
 	facefusion.globals.max_memory = args.max_memory
 	# face analyser
 	facefusion.globals.face_analyser_order = args.face_analyser_order
