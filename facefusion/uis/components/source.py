@@ -44,7 +44,7 @@ def render() -> None:
 	for x in arquivos:
 		files.append(caminho + '/' + x)
 
-	examples = gradio.Examples(examples=sorted(files), inputs=SOURCE_FILE, outputs=SOURCE_IMAGE, examples_per_page=20)
+	examples = gradio.Examples(examples=sorted(files), inputs=SOURCE_FILE, outputs=SOURCE_IMAGE,fn=update, examples_per_page=20)
 
 
 def listen() -> None:
