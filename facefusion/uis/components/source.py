@@ -44,9 +44,15 @@ def render() -> None:
 	for x in arquivos:
 		files.append(caminho + '/' + x)
 
-	examples = gradio.Examples(examples=sorted(files), inputs=SOURCE_FILE, outputs=SOURCE_IMAGE,fn=update, examples_per_page=20)
+	examples = gradio.Examples(examples=sorted(files), inputs=SOURCE_FILE, outputs=SOURCE_IMAGE,fn=update_image_from_file, examples_per_page=20)
 
-
+def update_image_from_file(file):
+	try:
+		image = SOURCE_IMAGE.open(file.name)
+		return image
+	except Exception as e:
+		return None
+		
 def listen() -> None:
 	SOURCE_FILE.change(update, inputs = SOURCE_FILE, outputs = SOURCE_IMAGE)
 
