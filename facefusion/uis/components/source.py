@@ -34,17 +34,6 @@ def render() -> None:
 		show_label = False
 	)
 	register_ui_component('source_image', SOURCE_IMAGE)
-	caminho = ''
-	if(facefusion.globals.isCollab):
-		caminho = '/content/facenico5/exemplos'
-	else:
-		caminho = '/kaggle/working/facenico5/exemplos'
-	arquivos = [f for f in os.listdir(caminho) if os.path.isfile(os.path.join(caminho, f))]
-	files = []
-	for x in arquivos:
-		files.append(caminho + '/' + x)
-
-	examples = gradio.Examples(examples=sorted(files), inputs=SOURCE_FILE, outputs=SOURCE_IMAGE,fn=update_image_from_file, examples_per_page=20)
 
 def update_image_from_file(file):
 	try:
