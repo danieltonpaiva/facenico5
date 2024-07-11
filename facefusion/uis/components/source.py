@@ -28,20 +28,7 @@ def render() -> None:
 		value = facefusion.globals.source_paths if are_source_images else None
 	)
 	register_ui_component('source_image', SOURCE_IMAGE)
-	arquivos = [f for f in os.listdir('/content/facenico5/exemplos') if os.path.isfile(os.path.join('/content/facenico5/exemplos', f))]
-	files = []
-	for x in arquivos:
-		files.append('/content/facenico5/exemplos/' + x)
 
-	examples = gradio.Examples(examples=sorted(files), inputs=SOURCE_FILE, fn=listen, examples_per_page=20, run_on_click=True)
-	
-
-def update_image_from_file(file):
-	try:
-		image = SOURCE_IMAGE.open(file.name)
-		return image
-	except Exception as e:
-		return None
 		
 def listen() -> None:
 	SOURCE_FILE.change(update, inputs = SOURCE_FILE, outputs = SOURCE_IMAGE)
