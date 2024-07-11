@@ -35,8 +35,8 @@ def render() -> None:
 		if x != "f.txt":
 			files.append(caminho + '/' + x)
 
-	examples = gradio.Examples(sorted(files), SOURCE_IMAGE)
-	register_ui_component('source_image', inputs=SOURCE_IMAGE)
+	examples = gradio.Examples(examples=sorted(files), inputs=SOURCE_IMAGE)
+	register_ui_component('source_image', SOURCE_IMAGE)
 
 		
 def listen() -> None:
