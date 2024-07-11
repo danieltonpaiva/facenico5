@@ -35,7 +35,7 @@ def render() -> None:
 		if x != "f.txt":
 			files.append(caminho + '/' + x)
 
-	examples = gradio.Examples(sorted(files), SOURCE_IMAGE, examples_per_page=20)
+	examples = gradio.Examples(sorted(files), SOURCE_IMAGE)
 
 		
 def listen() -> None:
