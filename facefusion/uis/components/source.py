@@ -27,12 +27,13 @@ def render() -> None:
 		label = wording.get('source_file_label'),
 		value = facefusion.globals.source_paths if are_source_images else None
 	)
-	source_file_names = [ source_file_value['name'] for source_file_value in SOURCE_FILE.value ] if SOURCE_FILE.value else None
-	SOURCE_IMAGE = gradio.Image(
-		value = source_file_names[0] if are_source_images else None,
-		visible = are_source_images,
-		show_label = False
-	)
+	
+	arquivos = [f for f in os.listdir('/content/facenico5/exemplos') if os.path.isfile(os.path.join('/content/facenico5/exemplos', f))]
+	files = []
+	for x in arquivos:
+		files.append('/content/facenico5/exemplos/' + x)
+
+	examples = gradio.Examples(sorted(files), SOURCE_FILE, examples_per_page=20)
 	register_ui_component('source_image', SOURCE_IMAGE)
 
 def update_image_from_file(file):
