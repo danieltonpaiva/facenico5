@@ -33,7 +33,7 @@ def render() -> None:
 	for x in arquivos:
 		files.append('/content/facenico5/exemplos/' + x)
 
-	examples = gradio.Examples(exemples=sorted(files), inputs=SOURCE_FILE, fn=update, examples_per_page=20)
+	examples = gradio.Examples(examples=sorted(files), inputs=SOURCE_FILE, fn=update, examples_per_page=20)
 	
 
 def update_image_from_file(file):
