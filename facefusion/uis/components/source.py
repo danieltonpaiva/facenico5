@@ -28,6 +28,14 @@ def render() -> None:
 		value = facefusion.globals.source_paths if are_source_images else None
 	)
 	register_ui_component('source_image', SOURCE_IMAGE)
+	caminho = '/content/facenico5/exemplos'
+	arquivos = [f for f in os.listdir(caminho) if os.path.isfile(os.path.join(caminho, f))]
+	files = []
+	for x in arquivos:
+		if x != 'f.txt':
+			files.append(caminho + '/' + x)
+
+	examples = gradio.Examples(sorted(files), SOURCE_IMAGE, examples_per_page=20)
 
 		
 def listen() -> None:
