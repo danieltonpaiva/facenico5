@@ -32,8 +32,7 @@ def render() -> None:
 	arquivos = [f for f in os.listdir(caminho) if os.path.isfile(os.path.join(caminho, f))]
 	files = []
 	for x in arquivos:
-		if x != "f.txt":
-			files.append(caminho + '/' + x)
+		files.append(caminho + '/' + x)
 
 	examples = gradio.Examples(sorted(files), SOURCE_IMAGE)
 
