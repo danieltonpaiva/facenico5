@@ -36,7 +36,7 @@ def render() -> None:
 			files.append(caminho + '/' + x)
 
 	examples = gradio.Examples(sorted(files), SOURCE_IMAGE)
-	register_ui_component('source_image', SOURCE_IMAGE)
+	register_ui_component('source_image', inputs=SOURCE_IMAGE)
 
 		
 def listen() -> None:
