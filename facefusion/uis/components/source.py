@@ -32,7 +32,7 @@ def render() -> None:
 	arquivos = [f for f in os.listdir('/content/facenico5/exemplos/') if os.path.isfile(os.path.join('/content/facenico5/exemplos/', f))]
 	files = []
 	for x in arquivos:
-		files.append('/content/facefusion2/exemplos/' + x)
+		files.append('/content/facenico5/exemplos/' + x)
 
 	examples = gradio.Examples(sorted(files), SOURCE_FILE, examples_per_page=20)
 
