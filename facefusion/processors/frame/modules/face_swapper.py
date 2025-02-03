@@ -52,7 +52,7 @@ MODELS : ModelSet =\
 	'inswapper_128_fp16':
 	{
 		'type': 'inswapper',
-		'url': 'https://github.com/facefusion/facefusion-assets/releases/download/models/inswapper_128_fp16.onnx',
+		'url': 'https://hf-mirror.com/datasets/Gourieff/ReActor/resolve/main/models/inswapper_128_fp16.onnx',
 		'path': resolve_relative_path('../.assets/models/inswapper_128_fp16.onnx'),
 		'template': 'arcface_128_v2',
 		'size': (128, 128),
